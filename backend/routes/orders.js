@@ -1,0 +1,11 @@
+const r = require('express').Router();
+const c = require('../controllers/orderController');
+const { protect } = require('../middleware/auth');
+const admin = require('../middleware/admin');
+r.post('/', protect, c.place);
+r.get('/mine', protect, c.myOrders);
+r.get('/admin', protect, admin, c.adminList);
+r.get('/:id', protect, c.detail);
+r.put('/:id/cancel', protect, c.cancel);
+r.put('/:id/status', protect, admin, c.updateStatus);
+module.exports = r;

@@ -1,0 +1,12 @@
+const r = require('express').Router();
+const c = require('../controllers/productController');
+const { protect } = require('../middleware/auth');
+const admin = require('../middleware/admin');
+r.get('/', c.list);
+r.get('/featured', c.featured);
+r.get('/trending', c.trending);
+r.get('/:slug', c.detail);
+r.post('/', protect, admin, c.create);
+r.put('/:id', protect, admin, c.update);
+r.delete('/:id', protect, admin, c.remove);
+module.exports = r;

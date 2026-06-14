@@ -1,0 +1,11 @@
+const r = require('express').Router();
+const c = require('../controllers/adminController');
+const { protect } = require('../middleware/auth');
+const admin = require('../middleware/admin');
+r.use(protect, admin);
+r.get('/stats', c.stats);
+r.get('/sales', c.sales);
+r.get('/users', c.users);
+r.put('/users/:id/role', c.setRole);
+r.delete('/users/:id', c.deleteUser);
+module.exports = r;

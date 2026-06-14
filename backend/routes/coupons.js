@@ -1,0 +1,10 @@
+const r = require('express').Router();
+const c = require('../controllers/couponController');
+const { protect } = require('../middleware/auth');
+const admin = require('../middleware/admin');
+r.post('/apply', protect, c.apply);
+r.get('/', protect, admin, c.list);
+r.post('/', protect, admin, c.create);
+r.put('/:id', protect, admin, c.update);
+r.delete('/:id', protect, admin, c.remove);
+module.exports = r;

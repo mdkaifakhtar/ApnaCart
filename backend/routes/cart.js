@@ -1,0 +1,10 @@
+const r = require('express').Router();
+const c = require('../controllers/cartController');
+const { protect } = require('../middleware/auth');
+r.use(protect);
+r.get('/', c.get);
+r.post('/', c.add);
+r.put('/', c.update);
+r.delete('/:productId', c.remove);
+r.delete('/', c.clear);
+module.exports = r;
