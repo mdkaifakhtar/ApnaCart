@@ -9,9 +9,62 @@ channel = "stable-25_05"
 [userenv]
 
 [userenv.shared]
-PORT = "5001"
+PORT = "8000"
 NODE_ENV = "development"
 JWT_SECRET = "apnacart-dev-secret-key-change-in-production"
 JWT_EXPIRES_IN = "7d"
 CLIENT_URL = "http://localhost:5000"
-VITE_API_URL = "http://localhost:5001/api"
+VITE_API_URL = "/api"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Backend API"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm run dev"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Backend API"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && npm run dev"
+waitForPort = 8000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 8000
+externalPort = 8000
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["bash", "-c", "cd backend && node server.js"]
+build = ["bash", "-c", "cd frontend && npm install && npm run build && cd ../backend && npm install"]
