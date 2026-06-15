@@ -24,6 +24,7 @@ import AdminProducts from './pages/admin/Products.jsx';
 import AdminCategories from './pages/admin/Categories.jsx';
 import AdminOrders from './pages/admin/Orders.jsx';
 import AdminUsers from './pages/admin/Users.jsx';
+import LogoGenerator from './pages/admin/LogoGenerator.jsx';
 
 export default function App() {
   useEffect(() => { bootstrap(); }, []);
@@ -50,6 +51,7 @@ export default function App() {
             <Route path="categories" element={<AdminCategories />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="logo-generator" element={<LogoGenerator />} />
           </Route>
         </Routes>
       </main>

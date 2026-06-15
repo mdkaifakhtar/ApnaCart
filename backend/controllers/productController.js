@@ -34,17 +34,47 @@ exports.detail = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
   const body = { ...req.body };
-  if (!body.slug) body.slug = slugify(body.name, { lower: true, strict: true });
-  if (body.category && !body.categorySlug) {
-    const c = await Category.findById(body.category);
-    body.categorySlug = c?.slug;
+
+  if (req.files && req.files.length > 0) {
+    const urls = req.files.map((f) => `/uploads/${f.filename}`);
+    body.image = urls[0];
+    body.images = urls;
   }
+
+  if (!body.slug) body.slug = slugify(body.name, { lower: true, strict: true });
+
+  let suffix = 0;
+  let slug = body.slug;
+  while (await Product.exists({ slug })) {
+    suffix += 1;
+    slug = `${body.slug}-${suffix}`;
+  }
+  body.slug = slug;
+
+  if (body.category && !body.categorySlug) {
+    const cat = await Category.findById(body.category);
+    body.categorySlug = cat?.slug;
+  }
+
   const product = await Product.create(body);
   res.status(201).json(product);
 });
 
 exports.update = asyncHandler(async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const update = { ...req.body };
+
+  if (req.files && req.files.length > 0) {
+    const urls = req.files.map((f) => `/uploads/${f.filename}`);
+    update.image = urls[0];
+    update.images = urls;
+  }
+
+  if (update.category && !update.categorySlug) {
+    const cat = await Category.findById(update.category);
+    if (cat) update.categorySlug = cat.slug;
+  }
+
+  const product = await Product.findByIdAndUpdate(req.params.id, update, { new: true });
   if (!product) { res.status(404); throw new Error('Not found'); }
   res.json(product);
 });
