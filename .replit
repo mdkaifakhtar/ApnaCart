@@ -1,0 +1,17 @@
+modules = ["nodejs-20", "web"]
+[agent]
+expertMode = true
+stack = "BEST_EFFORT_FALLBACK"
+
+[nix]
+channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+PORT = "5001"
+NODE_ENV = "development"
+JWT_SECRET = "apnacart-dev-secret-key-change-in-production"
+JWT_EXPIRES_IN = "7d"
+CLIENT_URL = "http://localhost:5000"
+VITE_API_URL = "http://localhost:5001/api"
